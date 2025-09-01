@@ -21,6 +21,7 @@ class Pilates_Sample_Data {
                 'area' => 'Norrmalm',
                 'price_class' => 'Medium',
                 'specialties' => array('Reformer Pilates', 'Gravidpilates'),
+                'image' => 'sthlm-pilates-studio.jpg',
                 'opening_hours' => array(
                     'monday' => array('open' => '06:00', 'close' => '21:00'),
                     'tuesday' => array('open' => '06:00', 'close' => '21:00'),
@@ -44,6 +45,7 @@ class Pilates_Sample_Data {
                 'area' => 'Östermalm',
                 'price_class' => 'Premium',
                 'specialties' => array('Mindful Pilates', 'Yin Pilates'),
+                'image' => 'zen-pilates-ostermalm.jpg',
                 'opening_hours' => array(
                     'monday' => array('open' => '07:00', 'close' => '20:00'),
                     'tuesday' => array('open' => '07:00', 'close' => '20:00'),
@@ -67,6 +69,7 @@ class Pilates_Sample_Data {
                 'area' => 'Södermalm',
                 'price_class' => 'Budget',
                 'specialties' => array('Contemporary Pilates', 'Barre Pilates'),
+                'image' => 'sodermalm-pilates-collective.jpg',
                 'opening_hours' => array(
                     'monday' => array('open' => '06:30', 'close' => '21:30'),
                     'tuesday' => array('open' => '06:30', 'close' => '21:30'),
@@ -90,6 +93,7 @@ class Pilates_Sample_Data {
                 'area' => 'Vasastan',
                 'price_class' => 'Medium',
                 'specialties' => array('Athletic Pilates', 'Rehabilitering'),
+                'image' => 'vasastan-movement-studio.jpg',
                 'opening_hours' => array(
                     'monday' => array('open' => '06:00', 'close' => '22:00'),
                     'tuesday' => array('open' => '06:00', 'close' => '22:00'),
@@ -113,6 +117,7 @@ class Pilates_Sample_Data {
                 'area' => 'Gamla Stan',
                 'price_class' => 'Premium',
                 'specialties' => array('Classical Pilates', 'Privatträning'),
+                'image' => 'pure-pilates-gamla-stan.jpg',
                 'opening_hours' => array(
                     'monday' => array('open' => '07:30', 'close' => '19:30'),
                     'tuesday' => array('open' => '07:30', 'close' => '19:30'),
@@ -136,6 +141,7 @@ class Pilates_Sample_Data {
                 'area' => 'Kungsholmen',
                 'price_class' => 'Medium',
                 'specialties' => array('Flow Pilates', 'TRX Pilates'),
+                'image' => 'flow-pilates-kungsholmen.jpg',
                 'opening_hours' => array(
                     'monday' => array('open' => '06:00', 'close' => '21:00'),
                     'tuesday' => array('open' => '06:00', 'close' => '21:00'),
@@ -238,7 +244,56 @@ class Pilates_Sample_Data {
             wp_set_post_terms($post_id, $specialty_ids, 'specialties');
         }
         
+        // Set featured image if image exists
+        if (isset($data['image'])) {
+            $image_path = WP_CONTENT_DIR . '/uploads/studios/' . $data['image'];
+            if (file_exists($image_path)) {
+                $image_url = content_url('uploads/studios/' . $data['image']);
+                $attachment_id = self::create_attachment_from_url($image_url, $post_id, $data['title']);
+                if ($attachment_id) {
+                    set_post_thumbnail($post_id, $attachment_id);
+                }
+            }
+        }
+        
         return $post_id;
+    }
+    
+    private static function create_attachment_from_url($image_url, $parent_post_id, $title) {
+        $upload_dir = wp_upload_dir();
+        $image_data = file_get_contents($image_url);
+        
+        if ($image_data === false) {
+            return false;
+        }
+        
+        $filename = basename($image_url);
+        $file = $upload_dir['path'] . '/' . $filename;
+        
+        // Save the image data to file
+        if (file_put_contents($file, $image_data) === false) {
+            return false;
+        }
+        
+        // Create attachment
+        $attachment = array(
+            'guid' => $upload_dir['url'] . '/' . $filename,
+            'post_mime_type' => wp_check_filetype($filename)['type'],
+            'post_title' => $title,
+            'post_content' => '',
+            'post_status' => 'inherit'
+        );
+        
+        $attachment_id = wp_insert_attachment($attachment, $file, $parent_post_id);
+        
+        if (!is_wp_error($attachment_id)) {
+            require_once(ABSPATH . 'wp-admin/includes/image.php');
+            $attachment_data = wp_generate_attachment_metadata($attachment_id, $file);
+            wp_update_attachment_metadata($attachment_id, $attachment_data);
+            return $attachment_id;
+        }
+        
+        return false;
     }
     
     public static function remove_sample_studios() {

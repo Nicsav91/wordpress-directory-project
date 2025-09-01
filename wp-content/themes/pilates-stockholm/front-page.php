@@ -1,6 +1,10 @@
 <?php get_header(); ?>
 
-<div class="hero-section">
+<?php 
+$hero_image_path = get_template_directory() . '/../../uploads/hero/pilates-hero.jpg';
+$hero_class = file_exists($hero_image_path) ? 'hero-section with-background' : 'hero-section';
+?>
+<div class="<?php echo $hero_class; ?>">
     <div class="container">
         <div class="hero-content">
             <h1>Hitta ditt perfekta pilatesstudio i Stockholm</h1>
