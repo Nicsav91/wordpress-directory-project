@@ -1,0 +1,15 @@
+# Environment variables with sensitive data
+.env
+
+# WordPress uploads and cache
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+
+# Local development files
+.DS_Store
+Thumbs.db
+*.log
+
+# Claude settings (local only)
+.claude/settings.local.json
