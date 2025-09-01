@@ -162,6 +162,132 @@ jQuery(document).ready(function($) {
         ];
     }
     
+    // Filter functionality
+    let currentPage = 1;
+    let isLoading = false;
+    
+    $('#apply-filters').on('click', function() {
+        applyFilters();
+    });
+    
+    $('#clear-filters').on('click', function() {
+        $('.pilates-filters select').val('');
+        $('.pilates-filters input[type="text"]').val('');
+        applyFilters();
+    });
+    
+    // Hero search functionality
+    $('.search-form').on('submit', function(e) {
+        e.preventDefault();
+        const searchTerm = $(this).find('input[type="text"]').val();
+        
+        // Scroll to directory section and perform search
+        $('html, body').animate({
+            scrollTop: $('.directory-section').offset().top - 100
+        }, 500, function() {
+            $('#search-input').val(searchTerm);
+            applyFilters();
+        });
+    });
+    
+    function applyFilters() {
+        if (isLoading) return;
+        
+        isLoading = true;
+        currentPage = 1;
+        
+        const filterData = {
+            action: 'filter_studios',
+            area: $('#area-filter').val(),
+            price_class: $('#price-filter').val(), 
+            specialty: $('#specialty-filter').val(),
+            search: $('#search-input').val(),
+            page: currentPage,
+            nonce: pilates_ajax.nonce
+        };
+        
+        // Show loading state
+        $('#studios-grid').html('<div class="loading">Laddar studios...</div>');
+        
+        $.ajax({
+            url: pilates_ajax.ajax_url,
+            type: 'POST',
+            data: filterData,
+            success: function(response) {
+                if (response.success) {
+                    const studios = response.data.studios;
+                    const hasMore = response.data.has_more;
+                    
+                    if (studios.length > 0) {
+                        $('#studios-grid').html(studios.join(''));
+                        
+                        if (hasMore) {
+                            $('#load-more-studios').show();
+                        } else {
+                            $('#load-more-studios').hide();
+                        }
+                    } else {
+                        $('#studios-grid').html('<div class="no-results"><p>Inga studios hittades som matchar dina kriterier.</p></div>');
+                        $('#load-more-studios').hide();
+                    }
+                } else {
+                    $('#studios-grid').html('<div class="error"><p>Ett fel uppstod. Försök igen.</p></div>');
+                }
+            },
+            error: function() {
+                $('#studios-grid').html('<div class="error"><p>Ett fel uppstod. Försök igen.</p></div>');
+            },
+            complete: function() {
+                isLoading = false;
+                $('#apply-filters').removeClass('highlight');
+            }
+        });
+    }
+    
+    // Load more functionality
+    $('#load-more-studios').on('click', function() {
+        if (isLoading) return;
+        
+        isLoading = true;
+        currentPage++;
+        
+        const filterData = {
+            action: 'filter_studios',
+            area: $('#area-filter').val(),
+            price_class: $('#price-filter').val(),
+            specialty: $('#specialty-filter').val(), 
+            search: $('#search-input').val(),
+            page: currentPage,
+            nonce: pilates_ajax.nonce
+        };
+        
+        $(this).text('Laddar...');
+        
+        $.ajax({
+            url: pilates_ajax.ajax_url,
+            type: 'POST',
+            data: filterData,
+            success: function(response) {
+                if (response.success) {
+                    const studios = response.data.studios;
+                    const hasMore = response.data.has_more;
+                    
+                    if (studios.length > 0) {
+                        $('#studios-grid').append(studios.join(''));
+                        
+                        if (!hasMore) {
+                            $('#load-more-studios').hide();
+                        }
+                    }
+                }
+            },
+            complete: function() {
+                isLoading = false;
+                $('#load-more-studios').text('Visa fler');
+            }
+        });
+    });
+    
     // Filter form enhancements
     $('.pilates-filters select').on('change', function() {
         const $form = $(this).closest('.pilates-filters');

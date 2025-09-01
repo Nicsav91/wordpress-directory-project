@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(docker-compose up:*)",
-      "Bash(docker:*)"
+      "Bash(docker:*)",
+      "Bash(curl:*)",
+      "Bash(winpty docker exec:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

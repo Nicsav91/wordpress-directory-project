@@ -106,8 +106,8 @@ class Pilates_Shortcodes {
                     <select id="area-filter" name="area">
                         <option value="">Alla områden</option>
                         <?php foreach ($areas as $area): ?>
-                            <option value="<?php echo esc_attr($area->slug); ?>">
-                                <?php echo esc_html($area->name); ?>
+                            <option value="<?php echo esc_attr(is_object($area) ? $area->slug : $area['slug']); ?>">
+                                <?php echo esc_html(is_object($area) ? $area->name : $area['name']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -118,8 +118,8 @@ class Pilates_Shortcodes {
                     <select id="price-filter" name="price_class">
                         <option value="">Alla prisklasser</option>
                         <?php foreach ($price_classes as $price_class): ?>
-                            <option value="<?php echo esc_attr($price_class->slug); ?>">
-                                <?php echo esc_html($price_class->name); ?>
+                            <option value="<?php echo esc_attr(is_object($price_class) ? $price_class->slug : $price_class['slug']); ?>">
+                                <?php echo esc_html(is_object($price_class) ? $price_class->name : $price_class['name']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -130,8 +130,8 @@ class Pilates_Shortcodes {
                     <select id="specialty-filter" name="specialty">
                         <option value="">Alla specialiteter</option>
                         <?php foreach ($specialties as $specialty): ?>
-                            <option value="<?php echo esc_attr($specialty->slug); ?>">
-                                <?php echo esc_html($specialty->name); ?>
+                            <option value="<?php echo esc_attr(is_object($specialty) ? $specialty->slug : $specialty['slug']); ?>">
+                                <?php echo esc_html(is_object($specialty) ? $specialty->name : $specialty['name']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>

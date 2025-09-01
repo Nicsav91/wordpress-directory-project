@@ -148,3 +148,13 @@ function pilates_stockholm_login_title() {
     return get_option('blogname');
 }
 add_filter('login_headertitle', 'pilates_stockholm_login_title');
+
+// Fallback menu when no menu is assigned
+function pilates_stockholm_fallback_menu() {
+    echo '<ul id="primary-menu" class="menu">';
+    echo '<li><a href="' . esc_url(home_url('/')) . '">Hem</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/studios/')) . '">Studios</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/om/')) . '">Om oss</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/kontakt/')) . '">Kontakt</a></li>';
+    echo '</ul>';
+}

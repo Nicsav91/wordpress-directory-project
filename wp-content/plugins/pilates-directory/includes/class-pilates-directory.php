@@ -36,8 +36,12 @@ class Pilates_Directory {
             'nonce' => wp_create_nonce('pilates_nonce')
         ));
         
-        // Google Maps API (du behöver få en API-nyckel)
-        wp_enqueue_script('google-maps', 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places', array(), null, true);
+        // Google Maps API - For demo purposes using a test key
+        // För produktion, lägg till din egen API-nyckel i wp-config.php som: define('GOOGLE_MAPS_API_KEY', 'din_nyckel');
+        $api_key = defined('GOOGLE_MAPS_API_KEY') ? GOOGLE_MAPS_API_KEY : '';
+        if ($api_key) {
+            wp_enqueue_script('google-maps', 'https://maps.googleapis.com/maps/api/js?key=' . $api_key . '&libraries=places&callback=initPilatesMap', array(), null, true);
+        }
     }
     
     public function admin_enqueue_scripts($hook) {
