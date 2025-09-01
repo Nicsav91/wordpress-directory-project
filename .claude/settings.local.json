@@ -5,7 +5,9 @@
       "Bash(docker:*)",
       "Bash(curl:*)",
       "Bash(winpty docker exec:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

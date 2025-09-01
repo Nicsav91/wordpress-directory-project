@@ -266,49 +266,62 @@ class Pilates_Shortcodes {
         </div>
         
         <script>
-        function initPilatesMap() {
-            const map = new google.maps.Map(document.getElementById('pilates-map'), {
-                zoom: <?php echo intval($atts['zoom']); ?>,
-                center: {lat: 59.3293, lng: 18.0686}, // Stockholm center
-                styles: [
-                    {
-                        featureType: 'poi',
-                        elementType: 'labels',
-                        stylers: [{visibility: 'off'}]
-                    }
-                ]
-            });
-            
-            // Load studio markers via AJAX
-            loadStudioMarkers(map);
-        }
+        // Define global callback function for Google Maps
+        window.initPilatesMap = function() {
+            if (document.getElementById('pilates-map')) {
+                const map = new google.maps.Map(document.getElementById('pilates-map'), {
+                    zoom: <?php echo intval($atts['zoom']); ?>,
+                    center: {lat: 59.3293, lng: 18.0686}, // Stockholm center
+                    styles: [
+                        {
+                            featureType: 'poi',
+                            elementType: 'labels',
+                            stylers: [{visibility: 'off'}]
+                        }
+                    ]
+                });
+                
+                // Load studio markers via AJAX
+                loadStudioMarkers(map);
+            }
+        };
         
         function loadStudioMarkers(map) {
             fetch('<?php echo admin_url('admin-ajax.php'); ?>?action=get_studio_markers')
                 .then(response => response.json())
                 .then(data => {
-                    data.forEach(studio => {
-                        const marker = new google.maps.Marker({
-                            position: {lat: parseFloat(studio.lat), lng: parseFloat(studio.lng)},
-                            map: map,
-                            title: studio.name
+                    if (Array.isArray(data)) {
+                        data.forEach(studio => {
+                            const marker = new google.maps.Marker({
+                                position: {lat: parseFloat(studio.lat), lng: parseFloat(studio.lng)},
+                                map: map,
+                                title: studio.name
+                            });
+                            
+                            const infoWindow = new google.maps.InfoWindow({
+                                content: `
+                                    <div class="map-studio-info">
+                                        <h4><a href="${studio.url}">${studio.name}</a></h4>
+                                        <p>${studio.address}</p>
+                                        ${studio.rating ? `<div class="rating">${studio.rating}/5 ⭐</div>` : ''}
+                                    </div>
+                                `
+                            });
+                            
+                            marker.addListener('click', () => {
+                                infoWindow.open(map, marker);
+                            });
                         });
-                        
-                        const infoWindow = new google.maps.InfoWindow({
-                            content: `
-                                <div class="map-studio-info">
-                                    <h4><a href="${studio.url}">${studio.name}</a></h4>
-                                    <p>${studio.address}</p>
-                                    ${studio.rating ? `<div class="rating">${studio.rating}/5 ⭐</div>` : ''}
-                                </div>
-                            `
-                        });
-                        
-                        marker.addListener('click', () => {
-                            infoWindow.open(map, marker);
-                        });
-                    });
+                    }
+                })
+                .catch(error => {
+                    console.log('Could not load studio markers:', error);
                 });
+        }
+        
+        // Fallback initialization if callback doesn't work
+        if (typeof google !== 'undefined' && google.maps) {
+            initPilatesMap();
         }
         </script>
         <?php
