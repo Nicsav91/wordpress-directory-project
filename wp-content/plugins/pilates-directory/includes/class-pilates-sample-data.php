@@ -30,6 +30,10 @@ class Pilates_Sample_Data {
                     'friday' => array('open' => '06:00', 'close' => '19:00'),
                     'saturday' => array('open' => '08:00', 'close' => '16:00'),
                     'sunday' => array('open' => '09:00', 'close' => '15:00')
+                ),
+                'reviews' => array(
+                    array('rating' => 5, 'author' => 'Anna Svensson', 'comment' => 'Fantastisk studio med professionella instruktörer!'),
+                    array('rating' => 4, 'author' => 'Erik Johansson', 'comment' => 'Bra atmosfär och välutrustad studio.')
                 )
             ),
             array(
@@ -54,6 +58,10 @@ class Pilates_Sample_Data {
                     'friday' => array('open' => '07:00', 'close' => '18:00'),
                     'saturday' => array('open' => '08:00', 'close' => '16:00'),
                     'sunday' => array('open' => '', 'close' => '')
+                ),
+                'reviews' => array(
+                    array('rating' => 5, 'author' => 'Maria Lindgren', 'comment' => 'Perfekt för avkoppling och styrketräning!'),
+                    array('rating' => 5, 'author' => 'Jonas Andersson', 'comment' => 'Lugn atmosfär och skickliga instruktörer.')
                 )
             ),
             array(
@@ -78,6 +86,10 @@ class Pilates_Sample_Data {
                     'friday' => array('open' => '06:30', 'close' => '19:30'),
                     'saturday' => array('open' => '08:00', 'close' => '17:00'),
                     'sunday' => array('open' => '09:00', 'close' => '16:00')
+                ),
+                'reviews' => array(
+                    array('rating' => 4, 'author' => 'Lisa Karlsson', 'comment' => 'Kreativ approach till pilates, gillar det!'),
+                    array('rating' => 3, 'author' => 'Peter Nilsson', 'comment' => 'Bra studio men kan vara lite trångt ibland.')
                 )
             ),
             array(
@@ -102,6 +114,10 @@ class Pilates_Sample_Data {
                     'friday' => array('open' => '06:00', 'close' => '20:00'),
                     'saturday' => array('open' => '07:00', 'close' => '18:00'),
                     'sunday' => array('open' => '08:00', 'close' => '17:00')
+                ),
+                'reviews' => array(
+                    array('rating' => 5, 'author' => 'Sandra Holm', 'comment' => 'Perfekt för idrottare! Proffsig träning.'),
+                    array('rating' => 4, 'author' => 'Mikael Berg', 'comment' => 'Utmanande klasser och bra utrustning.')
                 )
             ),
             array(
@@ -126,6 +142,10 @@ class Pilates_Sample_Data {
                     'friday' => array('open' => '07:30', 'close' => '17:30'),
                     'saturday' => array('open' => '09:00', 'close' => '15:00'),
                     'sunday' => array('open' => '', 'close' => '')
+                ),
+                'reviews' => array(
+                    array('rating' => 5, 'author' => 'Emma Gustafsson', 'comment' => 'Fantastisk klassisk pilates i unik miljö!'),
+                    array('rating' => 4, 'author' => 'David Larsson', 'comment' => 'Högt tak och vacker lokal, lite dyrare dock.')
                 )
             ),
             array(
@@ -150,6 +170,10 @@ class Pilates_Sample_Data {
                     'friday' => array('open' => '06:00', 'close' => '19:00'),
                     'saturday' => array('open' => '08:00', 'close' => '16:00'),
                     'sunday' => array('open' => '09:00', 'close' => '15:00')
+                ),
+                'reviews' => array(
+                    array('rating' => 4, 'author' => 'Camilla Stenberg', 'comment' => 'Moderna lokaler och bra flödesklasser.'),
+                    array('rating' => 3, 'author' => 'Henrik Olsson', 'comment' => 'Okej studio men skulle vilja ha fler tider.')
                 )
             )
         );
@@ -244,34 +268,59 @@ class Pilates_Sample_Data {
             wp_set_post_terms($post_id, $specialty_ids, 'specialties');
         }
         
-        // Set featured image if image exists
+        // Set featured image if image exists - simplified approach
         if (isset($data['image'])) {
             $image_path = WP_CONTENT_DIR . '/uploads/studios/' . $data['image'];
             if (file_exists($image_path)) {
-                $image_url = content_url('uploads/studios/' . $data['image']);
-                $attachment_id = self::create_attachment_from_url($image_url, $post_id, $data['title']);
-                if ($attachment_id) {
-                    set_post_thumbnail($post_id, $attachment_id);
-                }
+                // Store image path as meta for now - we'll handle display in templates
+                update_post_meta($post_id, '_studio_image', $data['image']);
             }
+        }
+        
+        // Add sample reviews
+        if (isset($data['reviews'])) {
+            self::create_sample_reviews($post_id, $data['reviews']);
         }
         
         return $post_id;
     }
     
-    private static function create_attachment_from_url($image_url, $parent_post_id, $title) {
-        $upload_dir = wp_upload_dir();
-        $image_data = file_get_contents($image_url);
+    private static function create_sample_reviews($studio_id, $reviews) {
+        if (!class_exists('Pilates_Review')) {
+            return;
+        }
         
-        if ($image_data === false) {
+        foreach ($reviews as $review_data) {
+            $review = array(
+                'studio_id' => $studio_id,
+                'author_name' => $review_data['author'],
+                'author_email' => strtolower(str_replace(' ', '.', $review_data['author'])) . '@example.com',
+                'rating' => $review_data['rating'],
+                'comment' => $review_data['comment'],
+                'date_created' => date('Y-m-d H:i:s', strtotime('-' . rand(1, 30) . ' days'))
+            );
+            
+            global $wpdb;
+            $table_name = $wpdb->prefix . 'pilates_reviews';
+            
+            // Check if table exists before inserting
+            if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") == $table_name) {
+                $wpdb->insert($table_name, $review);
+            }
+        }
+    }
+    
+    private static function create_attachment_from_file($image_path, $parent_post_id, $title) {
+        if (!file_exists($image_path)) {
             return false;
         }
         
-        $filename = basename($image_url);
-        $file = $upload_dir['path'] . '/' . $filename;
+        $upload_dir = wp_upload_dir();
+        $filename = basename($image_path);
         
-        // Save the image data to file
-        if (file_put_contents($file, $image_data) === false) {
+        // Copy file to WordPress uploads directory
+        $new_file = $upload_dir['path'] . '/' . $filename;
+        if (!copy($image_path, $new_file)) {
             return false;
         }
         
@@ -284,11 +333,11 @@ class Pilates_Sample_Data {
             'post_status' => 'inherit'
         );
         
-        $attachment_id = wp_insert_attachment($attachment, $file, $parent_post_id);
+        $attachment_id = wp_insert_attachment($attachment, $new_file, $parent_post_id);
         
         if (!is_wp_error($attachment_id)) {
             require_once(ABSPATH . 'wp-admin/includes/image.php');
-            $attachment_data = wp_generate_attachment_metadata($attachment_id, $file);
+            $attachment_data = wp_generate_attachment_metadata($attachment_id, $new_file);
             wp_update_attachment_metadata($attachment_id, $attachment_data);
             return $attachment_id;
         }

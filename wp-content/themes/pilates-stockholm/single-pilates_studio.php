@@ -30,7 +30,14 @@
                         <?php endif; ?>
                     </div>
                     
-                    <?php if (has_post_thumbnail()): ?>
+                    <?php 
+                    $studio_image = get_post_meta(get_the_ID(), '_studio_image', true);
+                    if ($studio_image && file_exists(WP_CONTENT_DIR . '/uploads/studios/' . $studio_image)): 
+                    ?>
+                        <div class="studio-featured-image">
+                            <img src="<?php echo content_url('uploads/studios/' . $studio_image); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    <?php elseif (has_post_thumbnail()): ?>
                         <div class="studio-featured-image">
                             <?php the_post_thumbnail('large'); ?>
                         </div>

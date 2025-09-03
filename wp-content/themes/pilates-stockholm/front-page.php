@@ -1,14 +1,18 @@
 <?php get_header(); ?>
 
 <?php 
-$hero_image_path = get_template_directory() . '/../../uploads/hero/pilates-hero.jpg';
-$hero_class = file_exists($hero_image_path) ? 'hero-section with-background' : 'hero-section';
+$hero_image_path = WP_CONTENT_DIR . '/uploads/hero/pilates-hero.jpg';
+$hero_image_url = '';
+if (file_exists($hero_image_path)) {
+    $hero_image_url = content_url('uploads/hero/pilates-hero.jpg');
+}
 ?>
-<div class="<?php echo $hero_class; ?>">
+<div class="hero-section<?php echo $hero_image_url ? ' with-background' : ''; ?>"<?php if ($hero_image_url): ?> style="background-image: url('<?php echo $hero_image_url; ?>')"<?php endif; ?>>
     <div class="container">
         <div class="hero-content">
-            <h1>Hitta ditt perfekta pilatesstudio i Stockholm</h1>
-            <p class="hero-subtitle">Upptäck de bästa pilatesstudiosen i Stockholm. Sök, jämför och hitta det som passar dig.</p>
+            <h1>Hitta din perfekta pilatesstudio i Stockholm</h1>
+            <p class="hero-subtitle">Upptäck de bästa pilatesstudiosen i Stockholm.</p>
+            <p class="hero-subtitle">Sök, jämför och hitta det som passar dig.</p>
             
             <div class="hero-search">
                 <?php echo do_shortcode('[pilates_search]'); ?>
