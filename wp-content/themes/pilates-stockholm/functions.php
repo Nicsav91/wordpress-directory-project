@@ -153,7 +153,43 @@ add_filter('login_headertitle', 'pilates_stockholm_login_title');
 function pilates_stockholm_fallback_menu() {
     echo '<ul id="primary-menu" class="menu">';
     echo '<li><a href="' . esc_url(home_url('/')) . '">Hem</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/studios/')) . '">Studios</a></li>';
+    
+    // Studios dropdown with Stockholm areas
+    echo '<li class="menu-item-has-children">';
+    echo '<a href="' . esc_url(home_url('/studios/')) . '">Studios</a>';
+    echo '<ul class="sub-menu">';
+    echo '<li><a href="#stockholm-city">Stockholm City</a></li>';
+    echo '<li><a href="#sodermalm">Södermalm</a></li>';
+    echo '<li><a href="#ostermalm">Östermalm</a></li>';
+    echo '<li><a href="#vasastan">Vasastan</a></li>';
+    echo '<li><a href="#kungsholmen">Kungsholmen</a></li>';
+    echo '<li><a href="#gamla-stan">Gamla Stan</a></li>';
+    echo '<li><a href="#norrmalm">Norrmalm</a></li>';
+    echo '<li><a href="#djurgarden">Djurgården</a></li>';
+    echo '</ul>';
+    echo '</li>';
+    
+    // Pilates types dropdown
+    echo '<li class="menu-item-has-children">';
+    echo '<a href="' . esc_url(home_url('/pilates-typer/')) . '">Pilates-typer</a>';
+    echo '<ul class="sub-menu">';
+    echo '<li><a href="#klassisk-pilates">Classical Pilates</a></li>';
+    echo '<li><a href="#reformer-pilates">Reformer Pilates</a></li>';
+    echo '<li><a href="#contemporary-pilates">Contemporary Pilates</a></li>';
+    echo '<li><a href="#flow-pilates">Flow Pilates</a></li>';
+    echo '<li><a href="#athletic-pilates">Athletic Pilates</a></li>';
+    echo '<li><a href="#mindful-pilates">Mindful Pilates</a></li>';
+    echo '<li><a href="#barre-pilates">Barre Pilates</a></li>';
+    echo '<li><a href="#yin-pilates">Yin Pilates</a></li>';
+    echo '<li><a href="#trx-pilates">TRX Pilates</a></li>';
+    echo '<li><a href="#aerial-pilates">Aerial Pilates</a></li>';
+    echo '<li><a href="#mat-pilates">Mat Pilates</a></li>';
+    echo '<li><a href="#gravidpilates">Gravidpilates</a></li>';
+    echo '<li><a href="#rehabilitering">Rehabilitering</a></li>';
+    echo '<li><a href="#privattraning">Privatträning</a></li>';
+    echo '</ul>';
+    echo '</li>';
+    
     echo '<li><a href="' . esc_url(home_url('/om/')) . '">Om oss</a></li>';
     echo '<li><a href="' . esc_url(home_url('/kontakt/')) . '">Kontakt</a></li>';
     echo '</ul>';

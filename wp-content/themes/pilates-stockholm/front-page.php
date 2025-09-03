@@ -11,8 +11,7 @@ if (file_exists($hero_image_path)) {
     <div class="container">
         <div class="hero-content">
             <h1>Hitta din perfekta pilatesstudio i Stockholm</h1>
-            <p class="hero-subtitle">Upptäck de bästa pilatesstudiosen i Stockholm.</p>
-            <p class="hero-subtitle">Sök, jämför och hitta det som passar dig.</p>
+            <p class="hero-subtitle">Upptäck de bästa pilatesstudiosen i Stockholm.<br>Sök, jämför och hitta det som passar dig.</p>
             
             <div class="hero-search">
                 <?php echo do_shortcode('[pilates_search]'); ?>

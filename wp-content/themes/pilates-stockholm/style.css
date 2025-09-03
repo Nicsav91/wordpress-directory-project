@@ -184,6 +184,7 @@ a:hover {
     display: flex;
     list-style: none;
     gap: 2rem;
+    margin: 0;
 }
 
 .main-navigation a {
@@ -199,6 +200,417 @@ a:hover {
 .main-navigation .current-menu-item a {
     background-color: var(--color-beige);
     color: var(--color-dark-green);
+}
+
+/* Dropdown Navigation */
+.main-navigation .menu-item-has-children {
+    position: relative;
+}
+
+.main-navigation .menu-item-has-children > a::after {
+    content: '▾';
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.main-navigation .menu-item-has-children:hover > a::after {
+    transform: rotate(180deg);
+}
+
+.main-navigation .menu-item-has-children:hover .sub-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.main-navigation .sub-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-light-beige);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    gap: 0;
+    padding: 0.5rem 0;
+}
+
+.main-navigation .sub-menu li {
+    margin: 0.5rem 0;
+}
+
+.main-navigation .sub-menu a {
+    padding: 0.75rem 1.25rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 400;
+    border-bottom: none;
+    transition: all 0.2s ease;
+    display: block;
+}
+
+.main-navigation .sub-menu li:last-child a {
+    border-bottom: none;
+}
+
+.main-navigation .sub-menu a:hover {
+    background-color: var(--color-light-beige);
+    color: var(--color-dark-green);
+    padding-left: 1.5rem;
+}
+
+/* Studio Page - Booking Section */
+.booking-section {
+    background: white;
+    border: 1px solid var(--color-light-beige);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.booking-section h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--color-dark-green);
+    font-size: 1.3rem;
+}
+
+.booking-intro {
+    color: var(--color-gray);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.class-option {
+    border: 1px solid var(--color-light-beige);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.class-option:hover {
+    border-color: var(--color-beige);
+    background-color: #fafafa;
+}
+
+.class-option:last-child {
+    margin-bottom: 0;
+}
+
+.class-name {
+    font-weight: 600;
+    color: var(--color-black);
+    margin-bottom: 0.5rem;
+}
+
+.class-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.class-time {
+    color: var(--color-gray);
+}
+
+.class-price {
+    color: var(--color-dark-green);
+    font-weight: 600;
+}
+
+.btn-book {
+    width: 100%;
+    background: var(--color-dark-green);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-book:hover {
+    background: #2d4a3d;
+    transform: translateY(-1px);
+}
+
+.booking-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.btn-full-schedule {
+    color: var(--color-dark-green);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-dark-green);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-full-schedule:hover {
+    background: var(--color-dark-green);
+    color: white;
+}
+
+/* Enhanced Reviews Section */
+.enhanced-reviews-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.reviews-header-enhanced h3 {
+    margin: 0 0 1.5rem 0;
+    color: var(--color-dark-green);
+    font-size: 1.5rem;
+}
+
+.rating-summary {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-light-beige);
+}
+
+.rating-display {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.large-rating {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-dark-green);
+}
+
+.stars-large {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
+
+.stars-large .star {
+    color: #ffa500;
+    margin-right: 0.1rem;
+}
+
+.rating-count {
+    color: var(--color-gray);
+    font-size: 0.9rem;
+}
+
+.rating-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.rating-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+}
+
+.rating-label {
+    min-width: 35px;
+    color: var(--color-gray);
+}
+
+.bar {
+    flex: 1;
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar .fill {
+    height: 100%;
+    background: var(--color-dark-green);
+    transition: width 0.3s ease;
+}
+
+.rating-percent {
+    min-width: 20px;
+    color: var(--color-gray);
+    text-align: right;
+}
+
+.write-review-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.btn-write-review {
+    background: var(--color-beige);
+    color: var(--color-dark-green);
+    border: 2px solid var(--color-dark-green);
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-write-review:hover {
+    background: var(--color-dark-green);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.reviews-list-enhanced {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.review-item-enhanced {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #fafafa;
+    border-radius: 12px;
+    border-left: 4px solid var(--color-beige);
+}
+
+.review-avatar .avatar-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--color-dark-green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.review-content-enhanced {
+    flex: 1;
+}
+
+.review-header-enhanced {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.reviewer-name {
+    color: var(--color-dark-green);
+    font-size: 1.1rem;
+}
+
+.review-meta {
+    text-align: right;
+}
+
+.review-stars {
+    margin-bottom: 0.25rem;
+}
+
+.review-stars .star {
+    color: #ffa500;
+    font-size: 0.9rem;
+}
+
+.review-date {
+    color: var(--color-gray);
+    font-size: 0.8rem;
+}
+
+.review-text {
+    line-height: 1.6;
+    color: var(--color-black);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .rating-summary {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .rating-display {
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .review-item-enhanced {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .review-header-enhanced {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+}
+
+/* Studio Page - Header Tagline */
+.studio-tagline {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--color-dark-green);
+    line-height: 1.7;
+    margin: 1rem 0 1.5rem 0;
+    text-align: left;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    border-left: 5px solid var(--color-beige);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.studio-tagline p {
+    margin: 0;
+}
+
+/* Website link styling */
+.website-link {
+    color: #1a73e8;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.website-link:hover {
+    color: #0d47a1;
+}
+
+/* Adjust spacing for studio sections */
+.studio-specialties-section {
+    margin-top: 0.5rem;
+}
+
+.booking-section {
+    margin-top: 0.5rem;
 }
 
 /* Hero Section */
@@ -525,8 +937,8 @@ a:hover {
 }
 
 .specialty-tag {
-    background-color: var(--color-beige);
-    color: var(--color-black);
+    background-color: var(--color-black);
+    color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
     font-size: 0.8rem;
